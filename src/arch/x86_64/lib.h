@@ -4,12 +4,12 @@
 	#error "This file should be included from src/lib.h (liburing)"
 #endif
 
-#ifndef LIBURING_ARCH_X86_LIB_H
-#define LIBURING_ARCH_X86_LIB_H
+#ifndef LIBURING_ARCH_X86_64_LIB_H
+#define LIBURING_ARCH_X86_64_LIB_H
 
 static inline long get_page_size(void)
 {
 	return 4096;
 }
 
-#endif /* #ifndef LIBURING_ARCH_X86_LIB_H */
+#endif /* #ifndef LIBURING_ARCH_X86_64_LIB_H */

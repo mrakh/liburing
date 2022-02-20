@@ -7,8 +7,14 @@
 #include <unistd.h>
 
 #define __INTERNAL__LIBURING_LIB_H
-#if defined(__x86_64__) || defined(__i386__)
+#if defined(__x86_64__)
+	#include "arch/x86_64/lib.h"
+#elif defined(__i386__)
 	#include "arch/x86/lib.h"
+#elif defined(__aarch64__)
+	#include "arch/aarch64/lib.h"
+#elif defined(__arm__)
+	#include "arch/aarch32/lib.h"
 #else
 	/*
 	 * We don't have nolibc support for this arch. Must use libc!
@@ -20,7 +26,6 @@
 	#include "arch/generic/lib.h"
 #endif
 #undef __INTERNAL__LIBURING_LIB_H
-
 
 #ifndef offsetof
 	#define offsetof(TYPE, FIELD) ((size_t) &((TYPE *)0)->FIELD)

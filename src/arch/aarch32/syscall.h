@@ -4,152 +4,148 @@
 	#error "This file should be included from src/syscall.h (liburing)"
 #endif
 
-#ifndef LIBURING_ARCH_X86_SYSCALL_H
-#define LIBURING_ARCH_X86_SYSCALL_H
+#ifndef LIBURING_ARCH_AARCH32_SYSCALL_H
+#define LIBURING_ARCH_AARCH32_SYSCALL_H
 
 /**
- * Note for syscall registers usage (x86):
- *   - %eax is the syscall number.
- *   - %eax is also the return value.
- *   - %ebx is the 1st argument.
- *   - %ecx is the 2nd argument.
- *   - %edx is the 3rd argument.
- *   - %esi is the 4th argument.
- *   - %edi is the 5th argument.
- *   - %ebp is the 6th argument.
+ * Note for syscall registers usage (aarch32):
+ *   - r7 is the syscall number.
+ *   - r0 is the return value.
+ *   - r0 is also the 1st argument.
+ *   - r1 is the 2nd argument.
+ *   - r2 is the 3rd argument.
+ *   - r3 is the 4th argument.
+ *   - r4 is the 5th argument.
+ *   - r5 is the 6th argument.
+ *
+ * `syscall` instruction will clobber lr.
  */
 
 #define __do_syscall0(num) ({						\
-	long _ret;							\
-	register long _num __asm__("eax") = (num);			\
+	register long _num __asm__("r7") = (num);			\
+	register long _arg1 __asm__("r0") = (num);			\
 									\
 	__asm__ volatile (						\
-		"int $0x80"						\
-		: "=a"(_ret)						\
-		: "0"(_num)						\
-		: "memory", "cc"					\
+		"svc #0"						\
+		: "=r"(_arg1)						\
+		: "r"(_num)						\
+		: "memory", "cc", "lr"					\
 	);								\
-	_ret;								\
+	_arg1;								\
 })
 
 #define __do_syscall1(num, arg1) ({					\
-	long _ret;							\
-	register long _num __asm__("eax") = (num);			\
-	register long _arg1 __asm__("ebx") = (long)(arg1);		\
+	register long _num __asm__("r7") = (num);			\
+	register long _arg1 __asm__("r0") = (long)(arg1);		\
 									\
 	__asm__ volatile (						\
-		"int $0x80"						\
-		: "=a"(_ret)						\
+		"svc #0"						\
+		: "=r"(_arg1)						\
 		: "r"(_arg1),						\
-		  "0"(_num)						\
-		: "memory", "cc"					\
+		  "r"(_num)						\
+		: "memory", "cc", "lr"					\
 	);								\
-	_ret;								\
+	_arg1;								\
 })
 
 #define __do_syscall2(num, arg1, arg2) ({				\
-	long _ret;							\
-	register long _num __asm__("eax") = (num);			\
-	register long _arg1 __asm__("ebx") = (long)(arg1);		\
-	register long _arg2 __asm__("ecx") = (long)(arg2);		\
+	register long _num __asm__("r7") = (num);			\
+	register long _arg1 __asm__("r0") = (long)(arg1);		\
+	register long _arg2 __asm__("r1") = (long)(arg2);		\
 									\
 	__asm__ volatile (						\
-		"int $0x80"						\
-		: "=a"(_ret)						\
+		"svc #0"						\
+		: "=r"(_arg1)						\
 		: "r"(_arg1),						\
 		  "r"(_arg2),						\
-		  "0"(_num)						\
-		: "memory", "cc"					\
+		  "r"(_num)						\
+		: "memory", "cc", "lr"					\
 	);								\
-	_ret;								\
+	_arg1;								\
 })
 
 #define __do_syscall3(num, arg1, arg2, arg3) ({				\
-	long _ret;							\
-	register long _num __asm__("eax") = (num);			\
-	register long _arg1 __asm__("ebx") = (long)(arg1);		\
-	register long _arg2 __asm__("ecx") = (long)(arg2);		\
-	register long _arg3 __asm__("edx") = (long)(arg3);		\
+	register long _num __asm__("r7") = (num);			\
+	register long _arg1 __asm__("r0") = (long)(arg1);		\
+	register long _arg2 __asm__("r1") = (long)(arg2);		\
+	register long _arg3 __asm__("r2") = (long)(arg3);		\
 									\
 	__asm__ volatile (						\
-		"int $0x80"						\
-		: "=a"(_ret)						\
+		"svc #0"						\
+		: "=r"(_arg1)						\
 		: "r"(_arg1),						\
 		  "r"(_arg2),						\
 		  "r"(_arg3),						\
-		  "0"(_num)						\
-		: "memory", "cc"					\
+		  "r"(_num)						\
+		: "memory", "cc", "lr"					\
 	);								\
-	_ret;								\
+	_arg1;								\
 })
 
 #define __do_syscall4(num, arg1, arg2, arg3, arg4) ({			\
-	long _ret;							\
-	register long _num __asm__("eax") = (num);			\
-	register long _arg1 __asm__("ebx") = (long)(arg1);		\
-	register long _arg2 __asm__("ecx") = (long)(arg2);		\
-	register long _arg3 __asm__("edx") = (long)(arg3);		\
-	register long _arg4 __asm__("esi") = (long)(arg4);		\
+	register long _num __asm__("r7") = (num);			\
+	register long _arg1 __asm__("r0") = (long)(arg1);		\
+	register long _arg2 __asm__("r1") = (long)(arg2);		\
+	register long _arg3 __asm__("r2") = (long)(arg3);		\
+	register long _arg4 __asm__("r3") = (long)(arg4);		\
 									\
 	__asm__ volatile (						\
-		"int $0x80"						\
-		: "=a"(_ret)						\
+		"svc #0"						\
+		: "=r"(_arg1)						\
 		: "r"(_arg1),						\
 		  "r"(_arg2),						\
 		  "r"(_arg3),						\
 		  "r"(_arg4),						\
-		  "0"(_num)						\
-		: "memory", "cc"					\
+		  "r"(_num)						\
+		: "memory", "cc", "lr"					\
 	);								\
-	_ret;								\
+	_arg1;								\
 })
 
 #define __do_syscall5(num, arg1, arg2, arg3, arg4, arg5) ({		\
-	long _ret;							\
-	register long _num __asm__("eax") = (num);			\
-	register long _arg1 __asm__("ebx") = (long)(arg1);		\
-	register long _arg2 __asm__("ecx") = (long)(arg2);		\
-	register long _arg3 __asm__("edx") = (long)(arg3);		\
-	register long _arg4 __asm__("esi") = (long)(arg4);		\
-	register long _arg5 __asm__("edi") = (long)(arg5);		\
+	register long _num __asm__("r7") = (num);			\
+	register long _arg1 __asm__("r0") = (long)(arg1);		\
+	register long _arg2 __asm__("r1") = (long)(arg2);		\
+	register long _arg3 __asm__("r2") = (long)(arg3);		\
+	register long _arg4 __asm__("r3") = (long)(arg4);		\
+	register long _arg5 __asm__("r4") = (long)(arg5);		\
 									\
 	__asm__ volatile (						\
-		"int $0x80"						\
-		: "=a"(_ret)						\
+		"svc #0"						\
+		: "=r"(_arg1)						\
 		: "r"(_arg1),						\
 		  "r"(_arg2),						\
 		  "r"(_arg3),						\
 		  "r"(_arg4),						\
 		  "r"(_arg5),						\
-		  "0"(_num)						\
-		: "memory", "cc"					\
+		  "r"(_num)						\
+		: "memory", "cc", "lr"					\
 	);								\
-	_ret;								\
+	_arg1;								\
 })
 
 #define __do_syscall6(num, arg1, arg2, arg3, arg4, arg5, arg6) ({	\
-	long _ret;							\
-	register long _num __asm__("eax") = (num);			\
-	register long _arg1 __asm__("ebx") = (long)(arg1);		\
-	register long _arg2 __asm__("ecx") = (long)(arg2);		\
-	register long _arg3 __asm__("edx") = (long)(arg3);		\
-	register long _arg4 __asm__("esi") = (long)(arg4);		\
-	register long _arg5 __asm__("edi") = (long)(arg5);		\
-	register long _arg6 __asm__("ebp") = (long)(arg6);		\
+	register long _num __asm__("r7") = (num);			\
+	register long _arg1 __asm__("r0") = (long)(arg1);		\
+	register long _arg2 __asm__("r1") = (long)(arg2);		\
+	register long _arg3 __asm__("r2") = (long)(arg3);		\
+	register long _arg4 __asm__("r3") = (long)(arg4);		\
+	register long _arg5 __asm__("r4") = (long)(arg5);		\
+	register long _arg6 __asm__("r5") = (long)(arg6);		\
 									\
 	__asm__ volatile (						\
-		"int $0x80"						\
-		: "=a"(_ret)						\
+		"svc #0"						\
+		: "=r"(_arg1)						\
 		: "r"(_arg1),						\
 		  "r"(_arg2),						\
 		  "r"(_arg3),						\
 		  "r"(_arg4),						\
 		  "r"(_arg5),						\
 		  "r"(_arg6),						\
-		  "0"(_num)						\
-		: "memory", "cc"					\
+		  "r"(_num)						\
+		: "memory", "cc", "lr"					\
 	);								\
-	_ret;								\
+	_arg1;								\
 })
 
 static inline void *__sys_mmap(void *addr, size_t length, int prot, int flags,
@@ -213,4 +209,4 @@ static inline int ____sys_io_uring_enter(int fd, unsigned to_submit,
 				       _NSIG / 8);
 }
 
-#endif /* #ifndef LIBURING_ARCH_X86_SYSCALL_H */
+#endif /* #ifndef LIBURING_ARCH_AARCH32_SYSCALL_H */

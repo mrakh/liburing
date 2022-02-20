@@ -71,8 +71,14 @@ static inline bool IS_ERR(const void *ptr)
 }
 
 #define __INTERNAL__LIBURING_SYSCALL_H
-#if defined(__x86_64__) || defined(__i386__)
+#if defined(__x86_64__)
+	#include "arch/x86_64/syscall.h"
+#elif defined(__i386__)
 	#include "arch/x86/syscall.h"
+#elif defined(__aarch64__)
+	#include "arch/aarch64/syscall.h"
+#elif defined(__arm__)
+	#include "arch/aarch32/syscall.h"
 #else
 	/*
 	 * We don't have native syscall wrappers
